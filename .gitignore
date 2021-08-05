@@ -1,0 +1,6 @@
+helpers/__pycache__/
+ui/__pycache__/
+env/
+*.py[cod]
+*$py.class
+
