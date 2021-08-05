@@ -126,8 +126,6 @@ def parse_powershell_credentials(credentials: list) -> dict:
 
 def save_credentials(account: str, region: str, credentials: dict) -> bool:
     config = get_local_aws_config()
-    if config is None:
-
     if not config.has_section(account):
         config.add_section(account)
 
