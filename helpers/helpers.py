@@ -28,22 +28,30 @@ def get_aws_regions() -> list:
         regions.append(str.strip(line))
     return regions
 
-def update_aws_regions(region, account) -> list:
+def update_aws_regions(region, account) -> dict:
     session = boto3.Session(profile_name=account)
     client = session.client('ec2')
 
-    response: dict = client.describe_regions()
+    try:
+        response: dict = client.describe_regions()
+    except Exception as e:
+        if type(e).__name__ == 'ClientError':
+            if 'RequestExpired' in str(e):
+                return {'success': False, 'error': 'RequestExpired' }
+        return {'success': False, 'error': e}
+
     regions = []
     if 'Regions' in response.keys():
         regions = response['Regions']
     else:
-        return regions
+        return {'success': False, 'error': regions}
 
     path = os.path.join(str(Path.home()), '.aws', 'regions')
     f = open(path, 'w')
     for region in regions:
         f.write(f"{region['RegionName']}\n")
     f.close()
+    return {'success': True, 'error': None}
 
 def get_profile_region(profile: str) -> str:
     config = get_local_aws_config()
@@ -132,9 +140,10 @@ def save_credentials(account: str, region: str, credentials: dict) -> bool:
 
     config.set(account, 'region', region)
 
-    path = os.path.join(str(Path.home()), '.aws', 'credentials')
+    path = os.path.join(str(Path.home()), '.aws')
     if not os.path.exists(path):
-        return False
+        os.makedirs(path)
+    path = os.path.join(path, 'credentials')
     f = open(path, 'w')
     config.write(f)
     return True
