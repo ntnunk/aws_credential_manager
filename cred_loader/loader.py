@@ -26,10 +26,12 @@ class MainUi(MainWindow):
             self.text_credentials.Value != '' 
         ):
             self.button_save.Enable(True)
+            self.button_save_and_close.Enable(True)
 
     def on_region_change(self: MainWindow, event: wx.Event):
         if self.combo_accounts.Value != '' and self.combo_region.Value != '' and self.text_credentials != '':
             self.button_save.Enable(True)
+            self.button_save_and_close.Enable(True)
 
     def on_cancel_click(self: MainWindow, event: wx.Event):
         self.Close()

@@ -63,7 +63,9 @@ class MainWindow ( wx.Frame ):
 		bSizer2.Add( self.button_save, 1, wx.ALL, 5 )
 
 		self.button_save_and_close = wx.Button( self, wx.ID_ANY, u"Save && Close", wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer2.Add( self.button_save_and_close, 1, wx.ALL|wx.EXPAND, 5 )
+		self.button_save_and_close.Enable( False )
+
+		bSizer2.Add( self.button_save_and_close, 1, wx.ALL, 5 )
 
 
 		bSizer1.Add( bSizer2, 1, wx.EXPAND, 5 )
