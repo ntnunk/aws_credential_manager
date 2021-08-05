@@ -5,11 +5,12 @@ import configparser
 from pathlib import Path
 
 def get_local_aws_config() -> configparser.ConfigParser:
-    path = os.path.join(str(Path.home()), '.aws/credentials')
+    path = os.path.join(str(Path.home()), '.aws', 'credentials')
     if not os.path.exists(path):
         return None
     config = configparser.ConfigParser()
-    config.read(path)
+    if os.path.exists(path):
+        config.read(path)
     return config
 
 def get_local_accounts() -> list:
@@ -19,7 +20,7 @@ def get_local_accounts() -> list:
     return config.sections()
 
 def get_aws_regions() -> list:
-    regions_file = os.path.join(str(Path.home()), '.aws/regions')
+    regions_file = os.path.join(str(Path.home()), '.aws', 'regions')
     if not os.path.exists(regions_file):
         return ['eu-west-1', 'us-east-1']
 
@@ -40,7 +41,7 @@ def update_aws_regions(region, account) -> list:
     else:
         return regions
 
-    path = os.path.join(str(Path.home()), '.aws/regions')
+    path = os.path.join(str(Path.home()), '.aws', 'regions')
     f = open(path, 'w')
     for region in regions:
         f.write(f"{region['RegionName']}\n")
@@ -125,6 +126,8 @@ def parse_powershell_credentials(credentials: list) -> dict:
 
 def save_credentials(account: str, region: str, credentials: dict) -> bool:
     config = get_local_aws_config()
+    if config is None:
+
     if not config.has_section(account):
         config.add_section(account)
 
@@ -133,7 +136,7 @@ def save_credentials(account: str, region: str, credentials: dict) -> bool:
 
     config.set(account, 'region', region)
 
-    path = os.path.join(str(Path.home()), '.aws/credentials')
+    path = os.path.join(str(Path.home()), '.aws', 'credentials')
     if not os.path.exists(path):
         return False
     f = open(path, 'w')
