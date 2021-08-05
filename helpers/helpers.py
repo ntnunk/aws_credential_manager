@@ -6,8 +6,6 @@ from pathlib import Path
 
 def get_local_aws_config() -> configparser.ConfigParser:
     path = os.path.join(str(Path.home()), '.aws', 'credentials')
-    if not os.path.exists(path):
-        return None
     config = configparser.ConfigParser()
     if os.path.exists(path):
         config.read(path)
