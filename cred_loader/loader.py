@@ -42,12 +42,12 @@ class MainUi(MainWindow):
         if result:
             wx.MessageBox("AWS Credentials file updated successfully.", "Success", wx.OK_DEFAULT | wx.ICON_INFORMATION)
             result = helpers.update_aws_regions(self.combo_region.Value, self.combo_accounts.Value)
-            if result['success'] == False and result['error'] == 'RequestExpired':
-                wx.MessageBox('SSO Credentials appear to have expired, unable to update Regions.', 'Credentials Expired', wx.OK_DEFAULT | wx.ICON_ERROR)
-            else:
-                wx.MessageBox('Uknown error. Failed to update AWS regions.', 'Error', wx.OK_DEFAULT | wx.ICON_ERROR)
-        else:
-            wx.MessageBox("Update of AWS credentials file failed.", "Update Failure", wx.OK_DEFAULT | wx.ICON_ERROR)
+            if result['success'] == False:
+                if result['error'] == 'RequestExpired':
+                    wx.MessageBox('SSO Credentials appear to have expired, unable to update Regions.', 'Credentials Expired', wx.OK_DEFAULT | wx.ICON_ERROR)
+                else:
+                    wx.MessageBox('Uknown error. Failed to update AWS regions.', 'Error', wx.OK_DEFAULT | wx.ICON_ERROR)
+                    print(result['error'])
 
     def on_save_and_close_click(self: MainWindow, event: wx.Event):
         self.on_save_click(event)
