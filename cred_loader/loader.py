@@ -48,6 +48,9 @@ class MainUi(MainWindow):
                 else:
                     wx.MessageBox('Uknown error. Failed to update AWS regions.', 'Error', wx.OK_DEFAULT | wx.ICON_ERROR)
                     print(result['error'])
+            self.combo_accounts.Value = ''
+            self.text_credentials.Value = ''
+            self.combo_region.Value = ''
 
     def on_save_and_close_click(self: MainWindow, event: wx.Event):
         self.on_save_click(event)
